@@ -2,7 +2,7 @@ import torch
 
 ###############################################
 
-EXP_NAME = "IAM-1000"; RESUME = True
+EXP_NAME = "BN-1000"; RESUME = False
 
 ###############################################
 
@@ -16,7 +16,8 @@ TN_NHEADS = 8
 TN_DIM_FEEDFORWARD = 512
 TN_ENC_LAYERS = 1
 TN_DEC_LAYERS = 1
-ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
+# ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
+ALPHABET = " ',:।ঁংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ািীুূৃেৈোৌ্ৎৗড়ঢ়য়০১২৩৪৫৬৭৮৯৷‌‍–—"
 VOCAB_SIZE = len(ALPHABET)
 G_LR = 0.0002
 D_LR = 0.0002
@@ -28,8 +29,8 @@ NUM_CRITIC_DOCR_TRAIN = 1
 NUM_CRITIC_GWL_TRAIN = 2
 NUM_CRITIC_DWL_TRAIN = 1
 NUM_FID_FREQ = 100
-DATASET = ['IAM']
-DATASET_PATHS = {'IAM':'../IAM_32.pickle'}
+DATASET = ['BN']
+DATASET_PATHS = {'BN':'../BN_32.pickle'}
 NUM_WRITERS = 1000
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 IS_SEQ = True
@@ -40,5 +41,5 @@ IS_KLD = False
 ADD_NOISE = False
 ALL_CHARS = False
 SAVE_MODEL = 5
-SAVE_MODEL_HISTORY = 100
+SAVE_MODEL_HISTORY = 75
 

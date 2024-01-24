@@ -2,16 +2,19 @@ import torch
 
 ###############################################
 
-EXP_NAME = "IAM-339-15-E3D3-LR0.00005-bs8"; RESUME = False
+EXP_NAME = "BN-339-15-E3D3-LR0.00005-bs8"; RESUME = False
 
-DATASET = 'IAM'
+DATASET = 'BN'
 if DATASET == 'IAM':
     DATASET_PATHS = 'files/IAM-32.pickle'
     NUM_WRITERS = 339
 if DATASET == 'CVL':
     DATASET_PATHS = 'files/CVL-32.pickle'
     NUM_WRITERS = 283
-ENGLISH_WORDS_PATH = 'files/english_words.txt'
+if DATASET == 'BN':
+    DATASET_PATHS = 'files/BN-32.pickle'
+    NUM_WRITERS = 133
+ENGLISH_WORDS_PATH = 'files/bn_words.txt'
 
 ###############################################
 
@@ -25,7 +28,8 @@ TN_NHEADS = 8
 TN_DIM_FEEDFORWARD = 512
 TN_ENC_LAYERS = 3
 TN_DEC_LAYERS = 3
-ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
+# ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
+ALPHABET = " ',:।ঁংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ািীুূৃেৈোৌ্ৎৗড়ঢ়য়০১২৩৪৫৬৭৮৯৷‌‍–—"
 VOCAB_SIZE = len(ALPHABET)
 G_LR = 0.00005
 D_LR = 0.00005
@@ -47,7 +51,7 @@ IS_KLD = False
 ADD_NOISE = False
 ALL_CHARS = False
 SAVE_MODEL = 5
-SAVE_MODEL_HISTORY = 100
+SAVE_MODEL_HISTORY = 75
 
 def init_project():
     import os, shutil
