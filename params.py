@@ -2,7 +2,7 @@ import torch
 
 ###############################################
 
-EXP_NAME = "BN-339-15-E3D3-LR0.00005-bs8"; RESUME = False
+EXP_NAME = "BN-UNIFIED-1-339-15-E3D3-LR0.00005-bs8"; RESUME = False
 
 DATASET = 'BN'
 if DATASET == 'IAM':
@@ -12,9 +12,9 @@ if DATASET == 'CVL':
     DATASET_PATHS = 'files/CVL-32.pickle'
     NUM_WRITERS = 283
 if DATASET == 'BN':
-    DATASET_PATHS = 'files/BN-32.pickle'
-    NUM_WRITERS = 133
-ENGLISH_WORDS_PATH = 'files/bn_words.txt'
+    DATASET_PATHS = 'files/BN-UNIFIED-CLEANED.pickle'
+    NUM_WRITERS = 368
+ENGLISH_WORDS_PATH = 'files/bn_words_updated.txt'
 
 ###############################################
 
