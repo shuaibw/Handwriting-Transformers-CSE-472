@@ -262,30 +262,47 @@ class Generator(nn.Module):
         FEAT_ST = self.Feat_Encoder(ST.view(B*N, 1, R, C))
         FEAT_ST = FEAT_ST.view(B, 512, 1, -1)
 
+        print("ST SHAPE: ", FEAT_ST.shape)
 
 
         FEAT_ST_ENC = FEAT_ST.flatten(2).permute(2,0,1)
 
         memory = self.encoder(FEAT_ST_ENC)
 
+        print("MEMORY SHAPE: ", memory.shape)
+
         QR_EMB = self.query_embed.weight[QR].permute(1,0,2)
+
+        print("QR_EMB SHAPE: ", QR_EMB.shape)
 
         tgt = torch.zeros_like(QR_EMB)
         
         hs = self.decoder(tgt, memory, query_pos=QR_EMB)
+
+        print("HS SHAPE: ", hs.shape)
 
                          
         h = hs.transpose(1, 2)[-1]#torch.cat([hs.transpose(1, 2)[-1], QR_EMB.permute(1,0,2)], -1)
 
         if ADD_NOISE: h = h + self.noise.sample(h.size()).squeeze(-1).to(DEVICE)
 
+        print("H SHAPE: ", h.shape)
+
         h = self.linear_q(h)
+
+        print("H SHAPE AFTER LINEAR: ", h.shape)
         h = h.contiguous()
+
+        print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
 
         h = h.view(h.size(0), h.shape[1]*2, 4, -1)
         h = h.permute(0, 3, 2, 1)
 
+        print("H SHAPE AFTER PERMUTE: ", h.shape)
+
         h = self.DEC(h)
+
+        print("H SHAPE AFTER DECODER: ", h.shape)
         
         self.dec_attn_weights = dec_attn_weights[-1].detach()
         self.enc_attn_weights = enc_attn_weights[-1].detach()
@@ -309,9 +326,9 @@ class TRGAN(nn.Module):
         self.epsilon = 1e-7
         self.netG = Generator().to(DEVICE)
         self.netD = nn.DataParallel(Discriminator()).to(DEVICE)
-        self.netW = nn.DataParallel(WDiscriminator()).to(DEVICE)
+        self.netW = nn.DataParallel(WDiscriminator()).to(DEVICE) # Sn maybe, attempts to predict writer
         self.netconverter = strLabelConverter(ALPHABET)
-        self.netOCR = CRNN().to(DEVICE)
+        self.netOCR = CRNN().to(DEVICE) #recognizer 
         self.OCR_criterion = CTCLoss(zero_infinity=True, reduction='none')
 
         block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
@@ -355,7 +372,7 @@ class TRGAN(nn.Module):
         self.KLD = 0 
 
 
-        with open(ENGLISH_WORDS_PATH, 'rb') as f:
+        with open(ENGLISH_WORDS_PATH, 'rb') as f: # ??????????
             self.lex = f.read().splitlines()
         lex=[]
         for word in self.lex:

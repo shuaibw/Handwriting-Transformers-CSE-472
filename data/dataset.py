@@ -87,7 +87,7 @@ class TextDataset():
             img = 255 - img
             img_height, img_width = img.shape[0], img.shape[1]
             outImg = np.zeros(( img_height, max_width), dtype='float32')
-            outImg[:, :img_width] = img[:, :max_width]
+            outImg[:, :img_width] = img[:, :max_width] # ?????????
 
             img = 255 - outImg
 
