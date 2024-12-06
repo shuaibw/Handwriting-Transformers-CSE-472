@@ -219,17 +219,30 @@ class strLabelConverter(object):
         ignore_case (bool, default=True): whether or not to ignore all of the case.
     """
 
-    def __init__(self, alphabet, ignore_case=False):
+    def __init__(self, alphabet, conjuncts, ignore_case=False):
         self._ignore_case = ignore_case
         if self._ignore_case:
             alphabet = alphabet.lower()
         self.alphabet = alphabet + '-'  # for `-1` index
+        self.conjuncts = conjuncts
 
         self.dict = {}
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
             self.dict[char] = i + 1
+        # Add conjuncts to dictionary
+        for i, conj in enumerate(conjuncts, start=len(alphabet)):
+            self.dict[conj] = i + 1
 
+    def find_conjunct(self, text, pos):
+        """Look ahead to find longest matching conjunct"""
+        for length in range(7, -1, -1):  # Check longer conjuncts first
+            if pos + length <= len(text):
+                candidate = text[pos:pos + length]
+                if candidate in CONJUNCTS:
+                    return candidate, length
+        return None, 0
+    
     def encode(self, text):
         """Support batch or single str.
         Args:
@@ -257,14 +270,28 @@ class strLabelConverter(object):
         for item in text:
             item = item.decode('utf-8', 'strict')
             length.append(len(item))
-            for char in item:
-                index = self.dict[char]
-                result.append(index)
+            i = 0
+            while i < len(item):
+                # Look for conjunct
+                conjunct, conj_len = self.find_conjunct(item, i)
+                
+                if conjunct:
+                    index = self.dict[conjunct]
+                    result.append(index)
+                    i += conj_len
+                else:
+                    # Handle single character
+                    index = self.dict[item[i]]
+                    result.append(index)
+                    i += 1
+                    
             results.append(result)
             result = []
 
-        return (torch.nn.utils.rnn.pad_sequence([torch.LongTensor(text) for text in results], batch_first=True), torch.IntTensor(length))
-
+        return (torch.nn.utils.rnn.pad_sequence(
+            [torch.LongTensor(text) for text in results], 
+            batch_first=True), 
+            torch.IntTensor(length))
     def decode(self, t, length, raw=False):
         """Decode encoded texts back into strs.
         Args:

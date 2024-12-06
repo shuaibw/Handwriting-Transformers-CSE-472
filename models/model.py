@@ -327,7 +327,7 @@ class TRGAN(nn.Module):
         self.netG = Generator().to(DEVICE)
         self.netD = nn.DataParallel(Discriminator()).to(DEVICE)
         self.netW = nn.DataParallel(WDiscriminator()).to(DEVICE) # Sn maybe, attempts to predict writer
-        self.netconverter = strLabelConverter(ALPHABET)
+        self.netconverter = strLabelConverter(ALPHABET, CONJUNCTS)
         self.netOCR = CRNN().to(DEVICE) #recognizer 
         self.OCR_criterion = CTCLoss(zero_infinity=True, reduction='none')
 
@@ -380,7 +380,7 @@ class TRGAN(nn.Module):
                 word=word.decode("utf-8")
             except:
                 continue
-            if len(word)<20:
+            if len(word)<50:
                 lex.append(word)
         self.lex = lex
 
