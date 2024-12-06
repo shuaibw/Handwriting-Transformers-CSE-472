@@ -118,14 +118,17 @@ class Generator(nn.Module):
                                           return_intermediate=True)
 
         self.Feat_Encoder = nn.Sequential(*([nn.Conv2d(INP_CHANNEL, 64, kernel_size=7, stride=2, padding=3, bias=False)] +list(models.resnet18(pretrained=True).children())[1:-2]))
-        
+        # load weight from new_encoder.pth
+        self.Feat_Encoder.load_state_dict(torch.load('new_encoder.pth'))
+
         self.query_embed = nn.Embedding(VOCAB_SIZE, TN_HIDDEN_DIM)
 
 
         self.linear_q = nn.Linear(TN_DIM_FEEDFORWARD, TN_DIM_FEEDFORWARD*8)
 
         self.DEC = FCNDecoder(res_norm = 'in')
-
+        # load weight from decoder_2.pth
+        self.DEC.load_state_dict(torch.load('decoder_2.pth'))
 
         self._muE = nn.Linear(512,512)
         self._logvarE = nn.Linear(512,512)         
@@ -262,47 +265,47 @@ class Generator(nn.Module):
         FEAT_ST = self.Feat_Encoder(ST.view(B*N, 1, R, C))
         FEAT_ST = FEAT_ST.view(B, 512, 1, -1)
 
-        print("ST SHAPE: ", FEAT_ST.shape)
+        # print("ST SHAPE: ", FEAT_ST.shape)
 
 
         FEAT_ST_ENC = FEAT_ST.flatten(2).permute(2,0,1)
 
         memory = self.encoder(FEAT_ST_ENC)
 
-        print("MEMORY SHAPE: ", memory.shape)
+        # print("MEMORY SHAPE: ", memory.shape)
 
         QR_EMB = self.query_embed.weight[QR].permute(1,0,2)
 
-        print("QR_EMB SHAPE: ", QR_EMB.shape)
+        # print("QR_EMB SHAPE: ", QR_EMB.shape)
 
         tgt = torch.zeros_like(QR_EMB)
         
         hs = self.decoder(tgt, memory, query_pos=QR_EMB)
 
-        print("HS SHAPE: ", hs.shape)
+        # print("HS SHAPE: ", hs.shape)
 
                          
         h = hs.transpose(1, 2)[-1]#torch.cat([hs.transpose(1, 2)[-1], QR_EMB.permute(1,0,2)], -1)
 
         if ADD_NOISE: h = h + self.noise.sample(h.size()).squeeze(-1).to(DEVICE)
 
-        print("H SHAPE: ", h.shape)
+        # print("H SHAPE: ", h.shape)
 
-        h = self.linear_q(h)
+        h = self.linear_q(h)   
 
-        print("H SHAPE AFTER LINEAR: ", h.shape)
+        # print("H SHAPE AFTER LINEAR: ", h.shape)
         h = h.contiguous()
 
-        print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
+        # print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
 
         h = h.view(h.size(0), h.shape[1]*2, 4, -1)
         h = h.permute(0, 3, 2, 1)
 
-        print("H SHAPE AFTER PERMUTE: ", h.shape)
+        # print("H SHAPE AFTER PERMUTE: ", h.shape)
 
         h = self.DEC(h)
 
-        print("H SHAPE AFTER DECODER: ", h.shape)
+        # print("H SHAPE AFTER DECODER: ", h.shape)
         
         self.dec_attn_weights = dec_attn_weights[-1].detach()
         self.enc_attn_weights = enc_attn_weights[-1].detach()
