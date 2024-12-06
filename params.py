@@ -51,7 +51,7 @@ IS_KLD = False
 ADD_NOISE = False
 ALL_CHARS = False
 SAVE_MODEL = 5
-SAVE_MODEL_HISTORY = 100
+SAVE_MODEL_HISTORY = 50
 
 def init_project():
     import os, shutil
