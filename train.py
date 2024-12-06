@@ -47,7 +47,7 @@ def main():
     os.makedirs('saved_models', exist_ok = True)
     MODEL_PATH = os.path.join('saved_models', EXP_NAME)
     if os.path.isdir(MODEL_PATH) and RESUME: 
-        model.load_state_dict(torch.load(MODEL_PATH+'/model400.pth'))
+        model.load_state_dict(torch.load(MODEL_PATH+'/model200.pth'))
         print (MODEL_PATH+' : Model loaded Successfully')
     else: 
         if not os.path.isdir(MODEL_PATH): os.mkdir(MODEL_PATH)
