@@ -328,6 +328,8 @@ class TRGAN(nn.Module):
 
         self.epsilon = 1e-7
         self.netG = Generator().to(DEVICE)
+        disc = Discriminator()
+        disc.load_state_dict(torch.load('discriminatorFin.pth'))
         self.netD = nn.DataParallel(Discriminator()).to(DEVICE)
         self.netW = nn.DataParallel(WDiscriminator()).to(DEVICE) # Sn maybe, attempts to predict writer
         self.netconverter = strLabelConverter(ALPHABET)
