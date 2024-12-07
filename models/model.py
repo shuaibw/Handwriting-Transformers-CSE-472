@@ -330,7 +330,7 @@ class TRGAN(nn.Module):
         self.netG = Generator().to(DEVICE)
         disc = Discriminator()
         disc.load_state_dict(torch.load('discriminatorFin.pth'))
-        self.netD = nn.DataParallel(Discriminator()).to(DEVICE)
+        self.netD = nn.DataParallel(disc).to(DEVICE)
         self.netW = nn.DataParallel(WDiscriminator()).to(DEVICE) # Sn maybe, attempts to predict writer
         self.netconverter = strLabelConverter(ALPHABET)
         self.netOCR = CRNN().to(DEVICE) #recognizer 
