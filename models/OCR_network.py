@@ -269,7 +269,7 @@ class strLabelConverter(object):
         results = []
         for item in text:
             item = item.decode('utf-8', 'strict')
-            length.append(len(item))
+            # length.append(len(item))
             i = 0
             while i < len(item):
                 # Look for conjunct
@@ -284,7 +284,7 @@ class strLabelConverter(object):
                     index = self.dict[item[i]]
                     result.append(index)
                     i += 1
-                    
+            length.append(len(result))
             results.append(result)
             result = []
 
