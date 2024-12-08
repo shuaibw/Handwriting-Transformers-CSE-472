@@ -272,6 +272,7 @@ class Generator(nn.Module):
         print("MEMORY SHAPE: ", memory.shape)
 
         print( "QR SHAPE : " , QR.shape)
+        print("MAX OF QR: ", QR.max())
         print("QR WEIGHT SHAPE", self.query_embed.weight.shape)
         QR_EMB = self.query_embed.weight[QR].permute(1,0,2)
 
