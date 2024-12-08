@@ -20,7 +20,7 @@ import wandb
 
 def main():
 
-    wandb.init(project="hwt-final", name = EXP_NAME)
+    # wandb.init(project="hwt-final", name = EXP_NAME)
 
     init_project()
 
