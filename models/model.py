@@ -380,7 +380,7 @@ class TRGAN(nn.Module):
                 word=word.decode("utf-8")
             except:
                 continue
-            if len(word)<50:
+            if len(word)<20:
                 lex.append(word)
         self.lex = lex
 
