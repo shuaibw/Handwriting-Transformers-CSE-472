@@ -3,6 +3,7 @@ import torch
 ###############################################
 
 EXP_NAME = "BN-UNIFIED-1-339-15-E3D3-LR0.00005-bs8"; RESUME = False
+PRINT_LOG = False
 
 DATASET = 'BN'
 if DATASET == 'IAM':

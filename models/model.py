@@ -269,43 +269,55 @@ class Generator(nn.Module):
 
         memory = self.encoder(FEAT_ST_ENC)
 
-        print("MEMORY SHAPE: ", memory.shape)
+        if PRINT_LOG:
+            print("MEMORY SHAPE: ", memory.shape)
 
-        print( "QR SHAPE : " , QR.shape)
-        print("MAX OF QR: ", QR.max())
-        print("QR WEIGHT SHAPE", self.query_embed.weight.shape)
+        if PRINT_LOG:
+            print( "QR SHAPE : " , QR.shape)
+        if PRINT_LOG:
+            print("MAX OF QR: ", QR.max())
+        if PRINT_LOG:
+            print("QR WEIGHT SHAPE", self.query_embed.weight.shape)
         QR_EMB = self.query_embed.weight[QR].permute(1,0,2)
 
-        print("QR_EMB SHAPE: ", QR_EMB.shape)
+        if PRINT_LOG:
+            print("QR_EMB SHAPE: ", QR_EMB.shape)
 
         tgt = torch.zeros_like(QR_EMB)
         
         hs = self.decoder(tgt, memory, query_pos=QR_EMB)
 
-        print("HS SHAPE: ", hs.shape)
+        if PRINT_LOG:
+            print("HS SHAPE: ", hs.shape)
 
                          
         h = hs.transpose(1, 2)[-1]#torch.cat([hs.transpose(1, 2)[-1], QR_EMB.permute(1,0,2)], -1)
 
         if ADD_NOISE: h = h + self.noise.sample(h.size()).squeeze(-1).to(DEVICE)
 
-        print("H SHAPE: ", h.shape)
+
+        if PRINT_LOG:
+            print("H SHAPE: ", h.shape)
 
         h = self.linear_q(h)
 
-        print("H SHAPE AFTER LINEAR: ", h.shape)
+        if PRINT_LOG:
+            print("H SHAPE AFTER LINEAR: ", h.shape)
         h = h.contiguous()
 
-        print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
+        if PRINT_LOG:
+            print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
 
         h = h.view(h.size(0), h.shape[1]*2, 4, -1)
         h = h.permute(0, 3, 2, 1)
 
-        print("H SHAPE AFTER PERMUTE: ", h.shape)
+        if PRINT_LOG:
+            print("H SHAPE AFTER PERMUTE: ", h.shape)
 
         h = self.DEC(h)
 
-        print("H SHAPE AFTER DECODER: ", h.shape)
+        if PRINT_LOG:
+            print("H SHAPE AFTER DECODER: ", h.shape)
         
         self.dec_attn_weights = dec_attn_weights[-1].detach()
         self.enc_attn_weights = enc_attn_weights[-1].detach()
