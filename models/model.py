@@ -269,40 +269,40 @@ class Generator(nn.Module):
 
         memory = self.encoder(FEAT_ST_ENC)
 
-        print("MEMORY SHAPE: ", memory.shape)
+        # print("MEMORY SHAPE: ", memory.shape)
 
         QR_EMB = self.query_embed.weight[QR].permute(1,0,2)
 
-        print("QR_EMB SHAPE: ", QR_EMB.shape)
+        # print("QR_EMB SHAPE: ", QR_EMB.shape)
 
         tgt = torch.zeros_like(QR_EMB)
         
         hs = self.decoder(tgt, memory, query_pos=QR_EMB)
 
-        print("HS SHAPE: ", hs.shape)
+        # print("HS SHAPE: ", hs.shape)
 
                          
         h = hs.transpose(1, 2)[-1]#torch.cat([hs.transpose(1, 2)[-1], QR_EMB.permute(1,0,2)], -1)
 
         if ADD_NOISE: h = h + self.noise.sample(h.size()).squeeze(-1).to(DEVICE)
 
-        print("H SHAPE: ", h.shape)
+        # print("H SHAPE: ", h.shape)
 
         h = self.linear_q(h)
 
-        print("H SHAPE AFTER LINEAR: ", h.shape)
+        # print("H SHAPE AFTER LINEAR: ", h.shape)
         h = h.contiguous()
 
-        print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
+        # print("H SHAPE AFTER CONTIGUOUS: ", h.shape)
 
         h = h.view(h.size(0), h.shape[1]*2, 4, -1)
         h = h.permute(0, 3, 2, 1)
 
-        print("H SHAPE AFTER PERMUTE: ", h.shape)
+        # print("H SHAPE AFTER PERMUTE: ", h.shape)
 
         h = self.DEC(h)
 
-        print("H SHAPE AFTER DECODER: ", h.shape)
+        # print("H SHAPE AFTER DECODER: ", h.shape)
         
         self.dec_attn_weights = dec_attn_weights[-1].detach()
         self.enc_attn_weights = enc_attn_weights[-1].detach()
