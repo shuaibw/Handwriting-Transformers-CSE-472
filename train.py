@@ -53,6 +53,11 @@ def main():
         if not os.path.isdir(MODEL_PATH): os.mkdir(MODEL_PATH)
 
 
+    model.save_images_for_fid_calculation(dataset, 1000)
+
+    return
+
+
     for epoch in range(EPOCHS):    
 
         
