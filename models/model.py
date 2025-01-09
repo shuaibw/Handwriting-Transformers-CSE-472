@@ -262,7 +262,7 @@ class Generator(nn.Module):
         FEAT_ST = self.Feat_Encoder(ST.view(B*N, 1, R, C))
         FEAT_ST = FEAT_ST.view(B, 512, 1, -1)
 
-        print("ST SHAPE: ", FEAT_ST.shape)
+        # print("ST SHAPE: ", FEAT_ST.shape)
 
 
         FEAT_ST_ENC = FEAT_ST.flatten(2).permute(2,0,1)
