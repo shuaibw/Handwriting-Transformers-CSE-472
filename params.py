@@ -4,7 +4,7 @@ import torch
 
 EXP_NAME = "BN-UNIFIED-1-339-15-E3D3-LR0.00005-bs8"; RESUME = True
 
-DATASET = 'BN'
+DATASET = 'BN-ENG'
 if DATASET == 'IAM':
     DATASET_PATHS = 'files/IAM-32.pickle'
     NUM_WRITERS = 339
@@ -14,7 +14,12 @@ if DATASET == 'CVL':
 if DATASET == 'BN':
     DATASET_PATHS = 'files/BN-UNIFIED-CLEANED.pickle'
     NUM_WRITERS = 368
-ENGLISH_WORDS_PATH = 'files/bn_words_updated.txt'
+if DATASET == 'BN-ENG':
+    DATASET_PATHS = 'files/BN-ENG-CLEANED.pickle'
+    NUM_WRITERS = 817
+# ENGLISH_WORDS_PATH = 'files/bn_words_updated.txt'
+ENGLISH_WORDS_PATH = 'files/BN-EN-WORDS.txt'
+
 
 ###############################################
 
@@ -28,8 +33,12 @@ TN_NHEADS = 8
 TN_DIM_FEEDFORWARD = 512
 TN_ENC_LAYERS = 3
 TN_DEC_LAYERS = 3
-# ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
-ALPHABET = " ',:।ঁংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ািীুূৃেৈোৌ্ৎৗড়ঢ়য়০১২৩৪৫৬৭৮৯৷‌‍–—"
+ALPHABET = 'Only thewigsofrcvdampbkuq.A-210xT5\'MDL,RYHJ"ISPWENj&BC93VGFKz();#:!7U64Q8?+*ZX/%'
+BN_ALPHABET = "',:।ঁংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ািীুূৃেৈোৌ্ৎৗড়ঢ়য়০১২৩৪৫৬৭৮৯৷‌‍–—"
+
+for char in BN_ALPHABET:
+    if char not in ALPHABET: ALPHABET += char
+
 VOCAB_SIZE = len(ALPHABET)
 G_LR = 0.00005
 D_LR = 0.00005
